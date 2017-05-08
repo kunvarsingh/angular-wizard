@@ -26,6 +26,7 @@ export class AppComponent  implements OnInit{
     email: ''
   };
   campaign: any = {};
+  campCustomer : any = [];
 
   isCompleted: boolean = false;
   // @ViewChild('fileInput') el:ElementRef;
@@ -73,8 +74,15 @@ export class AppComponent  implements OnInit{
                 });
   }
   
+  saveCampaignCustomer(customer){
+    console.log('campCustomer: ',customer);
+    this.campCustomer.push({customer: customer});
+    console.log('campCustomer: ',this.campCustomer);
+  }
+
   saveCampaign(campaign) {
     console.log('campaign: ' + campaign);
+    campaign.campaignCustomers = this.campCustomer;
     this.campaignService.saveCampaign(campaign)
             .subscribe(
                 data => {
@@ -105,6 +113,7 @@ export class AppComponent  implements OnInit{
             .subscribe(
                 data => {
                   console.log("Success",data);
+                  this.campCustomer = [];
                 },
                 error => {
                   // console.log("Success",error);

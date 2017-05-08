@@ -20,14 +20,13 @@
         </form>
         <h4>Customers</h4>
         <ul>  
-          <li *ngFor="let customer of customers">
-          <input type="checkbox" class="form-check-input" name="secret" [(ngModel)]="step3.showSecret"/>
-
+          <li *ngFor="let customer of customers; let i = index" [attr.data-index]="i">
+          <input type="checkbox" class="form-check-input" name="secret" [(ngModel)]="campCustomer[i]" (ngModelChange)="saveCampaignCustomer(customer)"/>
           {{ customer.email }} 
           </li>
         </ul>
       </wizard-step>
-      <wizard-step [title]="'Campaign'" [showNext]="step2.showNext" [showPrev]="step2.showPrev" (onNext)="onStep2Next($event)">
+      <wizard-step [title]="'Campaign'" [isValid]="campaignForm.form.valid" [showNext]="step2.showNext" [showPrev]="step2.showPrev" (onNext)="onStep2Next($event)">
         <h4>Add Campaign For Email ID's:</h4><br>
         <form #campaignForm="ngForm" (ngSubmit)="saveCampaign(campaign)">
           <div class="form-group">

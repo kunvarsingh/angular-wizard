@@ -1,5 +1,5 @@
 export class Campaign {
-	campaignCustomers : string;
+	campaignCustomers : any;
 	campaignSentDate: Date;
 	campaignUrl: string;
 	name: string;
