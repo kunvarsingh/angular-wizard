@@ -1,44 +1,46 @@
-import { Component, OnInit  } from '@angular/core';
-import { CustomerService } from './_services/index';
+import { Component, OnInit } from '@angular/core';
+//import { FileUploader } from 'ng2-file-upload';
+import { CustomerService, CampaignService } from './_services/index';
+import {Observable} from 'rxjs/Rx';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers:[CustomerService]
+  providers:[CustomerService,CampaignService]
 })
 export class AppComponent  implements OnInit{
   users: any = [];
   customers: any;
-  constructor(private customerService:CustomerService) {
-     
-    this.customers = [{"email": "test@gmail.com"},
-                      {"email": "abc@gmail.com"},
-                      {"email": "demo@gmail.com"},
-                      {"email": "testing@gmail.com"},
-                      {"email": "comp@gmail.com"}];
-  }
-    ngOnInit() {
-        this.loadAllUsers();
-    }
+  uuid: any;
+
   step2: any = {
     showNext: true,
     showPrev: true
   };
-
   step3: any = {
     showSecret: false
   };
 
-  data: any = {
+  customer: any = {
     email: ''
   };
+  campaign: any = {};
 
   isCompleted: boolean = false;
+  // @ViewChild('fileInput') el:ElementRef;
+  constructor(private customerService:CustomerService,
+   private campaignService:CampaignService) {
 
-  
+    this.customers = [];
+  }
+
+  ngOnInit() {
+      this.loadAllUsers();
+  }
 
   onStep1Next(event) {
+    console.log(event)
     console.log('Step1 - Next');
   }
 
@@ -57,9 +59,62 @@ export class AppComponent  implements OnInit{
   onStepChanged(step) {
     console.log('Changed to ' + step.title);
   }
-   private loadAllUsers() {
-     console.log("I am hitting before services");
-     this.customerService.getAll().subscribe(users => { this.users = users; console.log(this.users); });
-        // console.log("I am hitting after services"+this.users);
-    }
+
+  saveCustomer(customer) {
+    console.log('Customer ' + customer);
+    this.customerService.saveCustomer(customer)
+            .subscribe(
+                data => {
+                  console.log("Success",data);
+                  customer = {};                    
+                },
+                error => {
+                  // console.log("Success",error);
+                });
+  }
+  
+  saveCampaign(campaign) {
+    console.log('campaign: ' + campaign);
+    this.campaignService.saveCampaign(campaign)
+            .subscribe(
+                data => {
+                  this.uuid = data.uuid;
+                  console.log("Success",data.uuid);
+                },
+                error => {
+                  // console.log("Success",error);
+                });
+  }
+  
+  selectFile($event): void {
+    var inputValue = $event.target;
+    console.log(inputValue.files[0])
+    this.customerService.uploadFile(inputValue.files[0])
+            .subscribe(
+                data => {
+                  console.log("Success",data);
+                },
+                error => {
+                  // console.log("Success",error);
+                });
+  }
+
+  sendmail(){
+    console.log("uuid : ",this.uuid);
+    this.campaignService.SendMails(this.uuid)
+            .subscribe(
+                data => {
+                  console.log("Success",data);
+                },
+                error => {
+                  // console.log("Success",error);
+                });
+  }
+
+  private loadAllUsers() {
+    this.customerService.getCustomers().subscribe(customers => { 
+      this.customers = customers; 
+      console.log(this.customers); 
+    });
+  }
 }
