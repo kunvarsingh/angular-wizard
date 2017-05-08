@@ -1,0 +1,75 @@
+<div class="container">
+  <section class="demo">
+    <h1>
+      Demo
+    </h1>
+    <hr/>
+    <div style="height: 350px;">
+    <form-wizard (onStepChanged)="onStepChanged($event)">
+      <wizard-step [title]="'Customers'" [isValid]="emailForm.form.valid" (onNext)="onStep1Next($event)">
+        <h4>Add Customer</h4>
+        <!-- <p class="lead">Email is required to proceed to the next step.</p> -->
+        <form #emailForm="ngForm">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"
+              [(ngModel)]="data.email" required>
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+          </div>
+        </form>
+        <h4>Customers</h4>
+        <ul>  
+          <li *ngFor="let customer of customers">
+            {{ customer.email }} 
+          </li>
+        </ul>
+      </wizard-step>
+      <wizard-step [title]="'Campaign'" [showNext]="step2.showNext" [showPrev]="step2.showPrev" (onNext)="onStep2Next($event)">
+        <h4>Add Campaign</h4>
+        <p class="lead">You can also control when to show/hide navigation buttons.</p>
+        <form>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="showNext" [(ngModel)]="step2.showNext"/>
+              Show Next button
+            </label>
+          </div>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="showPrev" [(ngModel)]="step2.showPrev"/>
+              Show Previous button
+            </label>
+          </div>
+        </form>
+      </wizard-step>
+      <wizard-step [title]="'Upload-Template'" (onNext)="onStep3Next($event)">
+        <h1>Upload Template</h1>
+        <p class="lead">Check below if you want to access secret step</p>
+        <form>
+          <div class="form-check">
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="secret" [(ngModel)]="step3.showSecret"/>
+              I want to know the secret
+            </label>
+          </div>
+        </form>
+      </wizard-step>
+      <wizard-step [title]="'Step3.5'" [hidden]="!step3.showSecret">
+        <h1>Step3.5</h1>
+        <p class="lead">This is a secret place only special people can see this!!</p>
+      </wizard-step>
+     <wizard-step [title]="'Send-Email'" (onComplete)="onComplete($event)">
+        <div [ngSwitch]="isCompleted">
+          <div *ngSwitchDefault>
+            <h1>Send-Email</h1>
+            <p class="lead">This is the final step.</p>
+          </div>
+          <div *ngSwitchCase="true">
+            <h4>Thank you {{data.email}}! You have completed all the steps.</h4>
+          </div>
+        </div>
+      </wizard-step>
+    </form-wizard>
+    </div>
+  </section>
+</div>
