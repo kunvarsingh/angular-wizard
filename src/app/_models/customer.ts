@@ -1,4 +1,4 @@
-﻿export class Customer {
+﻿export interface Customer {
     email: string;
     uuid: string;
-}
+};

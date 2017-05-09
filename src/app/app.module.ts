@@ -28,3 +28,4 @@ import { AppConfig } from './app.config';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
