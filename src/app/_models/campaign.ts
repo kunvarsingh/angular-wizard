@@ -6,7 +6,4 @@ export class Campaign {
 	status: string; // ['NEW', 'READY', 'SENT'],
 	templatePath: string;
 	uuid: string;
-	
-	
-
 }

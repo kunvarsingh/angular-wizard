@@ -4,9 +4,9 @@
       Campaign
     </h1>
     <hr/>
-    <div style="height: 350px;">
+    <div style="height: 505px;">
     <form-wizard (onStepChanged)="onStepChanged($event)">
-      <wizard-step [title]="'Customers'" [isValid]="emailForm.form.valid" (onNext)="onStep1Next($event)">
+      <wizard-step [title]="'Customers'" [isValid]="isSelected" (onNext)="onStep1Next($event)">
         <h4>Add Customer</h4>
         <form #emailForm="ngForm" (ngSubmit)="saveCustomer(customer)">
           <div class="form-group">
@@ -20,13 +20,16 @@
         </form>
         <h4>Customers</h4>
         <ul>  
-          <li *ngFor="let customer of customers; let i = index" [attr.data-index]="i">
-          <input type="checkbox" class="form-check-input" name="secret" [(ngModel)]="campCustomer[i]" (ngModelChange)="saveCampaignCustomer(customer)"/>
-          {{ customer.email }} 
+
+          <li *ngFor="let customer of customers">
+          
+          <input type="checkbox" class="form-check-input" name="secret" [(ngModel)]="customer.isChecked" (ngModelChange)="isSelectedCustomer()"/>
+          {{ customer.email }}
+        
           </li>
         </ul>
       </wizard-step>
-      <wizard-step [title]="'Campaign'" [isValid]="campaignForm.form.valid" [showNext]="step2.showNext" [showPrev]="step2.showPrev" (onNext)="onStep2Next($event)">
+      <wizard-step [title]="'Campaign'" [isValid]="true" [showNext]="step2.showNext" [showPrev]="step2.showPrev" (onNext)="onStep2Next($event)">
         <h4>Add Campaign For Email ID's:</h4><br>
         <form #campaignForm="ngForm" (ngSubmit)="saveCampaign(campaign)">
           <div class="form-group">
@@ -39,7 +42,7 @@
             <input type="text" class="form-control" id="campUrl" name="campUrl" placeholder="Enter url"
               [(ngModel)]="campaign.campaignUrl" required>
           </div>
-          <button class="btn btn-primary btn-sm">Add Campaign</button>
+          <button class="btn btn-primary btn-sm" >Add Campaign</button>
         </form>
       </wizard-step>
       <wizard-step [title]="'Upload-Template'" (onNext)="onStep3Next($event)">

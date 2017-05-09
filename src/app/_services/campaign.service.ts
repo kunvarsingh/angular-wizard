@@ -3,13 +3,14 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { Campaign } from '../_models/index';
+import { AppConfig } from '../app.config';
 
 @Injectable()
 
 export class CampaignService {
     baseurl: any;
-    constructor(private http: Http) { 
-        this.baseurl = 'http://server.localhostsro.sk:19030';
+    constructor(private http: Http, private config: AppConfig ) { 
+        this.baseurl = config.apiUrl;
     }
 
     getCampaigns() {
@@ -24,7 +25,13 @@ export class CampaignService {
         return this.http.get(this.baseurl+'/campaign/' + uuid).map(
             (response: Response) => response.json());
     }
-
+    uploadFile(file: any, uuid: string) {
+        let headers = new Headers({
+            'Content-Type': 'multipart/form-data'
+        });
+        let url =  this.baseurl+ '/campaign/uploadTemplate/'+uuid;
+        return this.http.post(url,file,{headers});
+    }
     SendMails(uuid: string) {
         let url = this.baseurl+'/campaign/sendEmails/'+uuid;
         return this.http.post(url,uuid).map(

@@ -3,14 +3,15 @@ import { Http, Headers, RequestOptions, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { Customer } from '../_models/index';
+import { AppConfig } from '../app.config';
+
 
 @Injectable()
-
 export class CustomerService {
     baseurl: any;
 
-    constructor(private http: Http ) { 
-        this.baseurl = 'http://server.localhostsro.sk:19030';
+    constructor(private http: Http, private config: AppConfig ) { 
+        this.baseurl = config.apiUrl;
     }
 
     getCustomers() {

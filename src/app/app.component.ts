@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CustomerService, CampaignService } from './_services/index';
+import { CustomerService, CampaignService} from './_services/index';
 import {Observable} from 'rxjs/Rx';
 
 @Component({
@@ -29,6 +29,7 @@ export class AppComponent  implements OnInit{
   campCustomer : any = [];
 
   isCompleted: boolean = false;
+  isSelected: boolean = false;
   // constructor
   constructor(private customerService:CustomerService,
    private campaignService:CampaignService) {
@@ -41,8 +42,16 @@ export class AppComponent  implements OnInit{
   }
 
   onStep1Next(event) {
+    this.campCustomer = this.customers.filter(data => data.isChecked == true);
   }
-
+  isSelectedCustomer(){
+    this.campCustomer = this.customers.filter(data => data.isChecked == true);
+    if(this.campCustomer.length == 0){
+      this.isSelected = false;
+    }else{
+       this.isSelected = true;
+    }
+  }
   onStep2Next(event) {
   }
 
@@ -54,15 +63,27 @@ export class AppComponent  implements OnInit{
   }
   onStepChanged(step) {
   }
-  // to save customer
+  // Save customer
   saveCustomer(customer) {
-    this.customerService.saveCustomer(customer)
-            .subscribe(
-                data => {
-                  customer = {};                    
-                },
-                error => {
-                });
+    //Check if email already exists
+    let isExists = this.customers.filter((data) => data.email == customer.email).length > 0;
+    debugger;
+    if(!isExists){
+      this.customerService.saveCustomer(customer)
+              .subscribe(
+                  data => {
+                     
+
+                  },
+                  error => {
+                  });
+      this.customer = {}; 
+      this.loadAllCustomers();
+    }
+    else{
+      // Change message
+      // this.alertService.success("Already exists");
+    }
   }
   // to push customers in array as per selection
   saveCampaignCustomer(customer){
@@ -78,11 +99,12 @@ export class AppComponent  implements OnInit{
                 },
                 error => {
                 });
+    this.campaign ={};
   }
   // to upload file
   selectFile($event): void {
     var inputValue = $event.target;
-    this.customerService.uploadFile(inputValue.files[0])
+    this.campaignService.uploadFile(inputValue.files[0],this.uuid)
             .subscribe(
                 data => {
                 },
@@ -102,6 +124,7 @@ export class AppComponent  implements OnInit{
   // to load customers
   private loadAllCustomers() {
     this.customerService.getCustomers().subscribe(customers => { 
+      customers.forEach(data => data.isChecked = false);
       this.customers = customers; 
     });
   }

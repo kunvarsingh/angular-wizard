@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { CustomerService,CampaignService } from './_services/index';
 import { AppComponent } from './app.component';
 import { FormWizardModule } from 'angular2-wizard';
+import { AppConfig } from './app.config';
 
 
 @NgModule({
@@ -20,7 +21,9 @@ import { FormWizardModule } from 'angular2-wizard';
   ],
   providers: [
       CustomerService,
-      CampaignService
+      CampaignService,
+      AppConfig
+  
   ],
   bootstrap: [AppComponent]
 })
