@@ -67,7 +67,6 @@ export class AppComponent  implements OnInit{
   saveCustomer(customer) {
     //Check if email already exists
     let isExists = this.customers.filter((data) => data.email == customer.email).length > 0;
-    debugger;
     if(!isExists){
       this.customerService.saveCustomer(customer)
               .subscribe(
